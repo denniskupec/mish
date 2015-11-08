@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+$time = microtime(true);
+
+if($argc !== 2 || !is_dir($argv[1])) {
+	exit("\033[1;36mUsage: \033[0;36m./mish <directory> \n\033[0m");
+}
+
+$count = 0;
+$path = realpath($argv[1]);
+$files= array_diff(scandir($path), ["..", "."]);
+
+foreach($files as $i) {
+	++$count;
+	$new_name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, rand(8, 18));
+	rename("{$path}/{$i}", "{$path}/{$new_name}." . pathinfo($path . $i, PATHINFO_EXTENSION));
+}
+
+echo "\033[1;36mFiles Renamed: \033[0;36m$count \n";
+echo "\033[1;36mCompleted In: \033[0;36m" . round((microtime(true) - $time)*1000) . "ms \n\033[0m";
