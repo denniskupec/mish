@@ -11,10 +11,21 @@ $count = 0;
 $path = realpath($argv[1]);
 $files= array_diff(scandir($path), ["..", "."]);
 
+$random_name = function() use (&$namelist, &$random_name)
+{
+	if($namelist === null) $namelist = [];
+
+	$new_name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, mt_rand(4, 21));
+	
+	if(!in_array($new_name, $namelist)) {
+		return $new_name;
+	}
+	return $random_name();
+};
+
 foreach($files as $i) {
 	++$count;
-	$new_name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, rand(8, 18));
-	rename("{$path}/{$i}", "{$path}/{$new_name}." . pathinfo($path . $i, PATHINFO_EXTENSION));
+	rename("{$path}/{$i}", "{$path}/{$random_name()}." . pathinfo($path . $i, PATHINFO_EXTENSION));
 }
 
 echo "\033[1;36mFiles Renamed: \033[0;36m$count \n";
