@@ -8,13 +8,13 @@ if($argc !== 2 || !is_dir($argv[1])) {
 }
 
 $path = realpath($argv[1]);
-$files = array_diff(scandir($path), ["..", "."]);
+$files = array_diff(scandir($path), ["..", ".", ".DS_Store"]);
 
 $random_name = function() use (&$namelist, &$random_name)
 {
 	if($namelist === null) $namelist = [];
 
-	$new_name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, mt_rand(4, 21));
+	$new_name = substr(str_shuffle("abcdefghijklmnopqrstuvwxy"), 0, mt_rand(10, 21));
 	
 	if(!in_array($new_name, $namelist)) {
 		return $new_name;
