@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+require __DIR__ . "/functions.php";
+
 $time = microtime(true);
 
 if($argc !== 2 || !is_dir($argv[1])) {
@@ -10,22 +12,11 @@ if($argc !== 2 || !is_dir($argv[1])) {
 $path = realpath($argv[1]);
 $files = array_diff(scandir($path), ["..", ".", ".DS_Store"]);
 
-$random_name = function() use (&$namelist, &$random_name)
-{
-	if($namelist === null) $namelist = [];
-
-	$new_name = substr(str_shuffle("abcdefghijklmnopqrstuvwxy"), 0, mt_rand(10, 21));
-	
-	if(!in_array($new_name, $namelist)) {
-		return $new_name;
-	}
-	return $random_name();
-};
-
 foreach($files as $i) {
-	rename("{$path}/{$i}", "{$path}/{$random_name()}." . pathinfo($path . $i, PATHINFO_EXTENSION));
+	rename("{$path}/{$i}", "{$path}/{$random_string()}." . pathinfo($path . $i, PATHINFO_EXTENSION));
 }
 
 echo "\033[1;36mFiles Renamed: \033[0;36m" . count($files) . " \n";
 echo "\033[1;36mMemory Used: \033[0;36m" . round(memory_get_peak_usage()/1048576, 3) . " MB\n";
 echo "\033[1;36mCompleted In: \033[0;36m" . round((microtime(true) - $time)*1000) . "ms \n\033[0m";
+
